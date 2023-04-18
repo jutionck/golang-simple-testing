@@ -3,49 +3,56 @@ package service
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 	"testing"
 )
 
-func TestCalculatorAdd_Success(t *testing.T) {
-	t.Run("Calculator Add operator testing", func(t *testing.T) {
-		var num1 float64 = 10
-		var num2 float64 = 20
-		calc := Calculator{Num1: num1, Num2: num2}
-		r, err := calc.Add()
-		require.NoError(t, err)
-		assert.Equal(t, 30.0, *r)
-	})
+type CalculatorTestSuite struct {
+	suite.Suite
+	calService Calculator
 }
 
-func TestCalculatorAdd_Fail(t *testing.T) {
-	t.Run("Calculator Add detected negative number testing", func(t *testing.T) {
-		var num1 float64 = -10
-		var num2 float64 = 20
-		calc := Calculator{Num1: num1, Num2: num2}
-		_, err := calc.Add()
-		require.Error(t, err)
-		assert.EqualError(t, err, "negative number detected")
-	})
+// SetupTest -> otomatis dijalankan
+func (suite *CalculatorTestSuite) SetupTest() {
+	suite.calService = Calculator{}
 }
 
-func TestCalculatorSub_Success(t *testing.T) {
-	t.Run("Calculator Sub operator testing", func(t *testing.T) {
-		var num1 float64 = 10
-		var num2 float64 = 5
-		calc := Calculator{Num1: num1, Num2: num2}
-		r, err := calc.Sub()
-		require.NoError(t, err)
-		assert.Equal(t, 5.0, *r)
-	})
+func TestCalculatorTestSuite(t *testing.T) {
+	suite.Run(t, new(CalculatorTestSuite))
 }
 
-func TestCalculatorSub_Fail(t *testing.T) {
-	t.Run("Calculator Sub detected negative number testing", func(t *testing.T) {
-		var num1 float64 = -10
-		var num2 float64 = 5
-		calc := Calculator{Num1: num1, Num2: num2}
-		_, err := calc.Sub()
-		require.Error(t, err)
-		assert.EqualError(t, err, "negative number detected")
-	})
+func (suite *CalculatorTestSuite) TestCalculatorAdd_Success() {
+	var num1 float64 = 10
+	var num2 float64 = 20
+	calc := Calculator{Num1: num1, Num2: num2}
+	r, err := calc.Add()
+	require.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 30.0, *r)
+}
+
+func (suite *CalculatorTestSuite) TestCalculatorAdd_Fail() {
+	var num1 float64 = -10
+	var num2 float64 = 20
+	calc := Calculator{Num1: num1, Num2: num2}
+	_, err := calc.Add()
+	require.Error(suite.T(), err)
+	assert.EqualError(suite.T(), err, "negative number detected")
+}
+
+func (suite *CalculatorTestSuite) TestCalculatorSub_Success() {
+	var num1 float64 = 10
+	var num2 float64 = 5
+	calc := Calculator{Num1: num1, Num2: num2}
+	r, err := calc.Sub()
+	require.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 5.0, *r)
+}
+
+func (suite *CalculatorTestSuite) TestCalculatorSub_Fail() {
+	var num1 float64 = -10
+	var num2 float64 = 5
+	calc := Calculator{Num1: num1, Num2: num2}
+	_, err := calc.Sub()
+	require.Error(suite.T(), err)
+	assert.EqualError(suite.T(), err, "negative number detected")
 }
